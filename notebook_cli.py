@@ -16,8 +16,11 @@ if not os.path.exists(DATA_FILE): # incase it doesn't exist
 
 
 def load_tasks():
-    with open(DATA_FILE, 'r') as f:
-        return json.load(f)
+    try:
+        with open(DATA_FILE, 'r') as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        return [] # return an empty list if the file is empty or invalid
     
 def save_tasks(tasks):
     with open(DATA_FILE, 'w') as f:
@@ -28,7 +31,7 @@ def save_tasks(tasks):
 # under a group command (cli in this case)
 @click.group()
 def cli():
-    "noteNest is a CLI notebook app for managing notes and tasks"
+    ''' noteNest is a CLI notebook app for managing notes and tasks '''
     pass
 
 @cli.command()
@@ -44,7 +47,7 @@ def add(description):
 
 @cli.command()
 def list():
-    ''' lists all tasks created by user in a table'''
+    ''' lists all tasks created by user in a table '''
 
     tasks = load_tasks()
     if not tasks:
@@ -53,8 +56,8 @@ def list():
 
     # rich table object for displaying tasks
     table = Table(title="Tasks", show_header=True, header_style="bold magenta")
-    table.add_column("Done", style="dim", width=6)
-    table.add_column("Description", min_width=20)
+    table.add_column("ID #", style="dim", width=6)
+    table.add_column("Description", min_width=30)
     table.add_column("Status", justify="center")
 
     # adding tasks to table based on:
@@ -65,3 +68,39 @@ def list():
 
     # output table
     console.print(table)
+
+@cli.command()
+@click.argument("task_id", type=int)
+def done(task_id):
+    ''' marks a task as done based on task_id '''
+
+    tasks = load_tasks()
+
+    # error handling for invalid task_id
+    if task_id < 0 or task_id >= len(tasks):
+        console.print(f"[red]ERROR:[/red] Task #{task_id} does not exist")
+        return
+
+    # marking task as done
+    tasks[task_id]["done"] = True
+    save_tasks(tasks)
+    console.print(f"[green]Task marked as done:[/green] {tasks[task_id]['description']}")
+
+@cli.command()
+@click.argument("task_id", type=int)
+def delete(task_id):
+    ''' delete a task from the task list '''
+
+    tasks = load_tasks()
+
+    if task_id < 0 or task_id >= len(tasks):
+        console.print(f"[red]ERROR:[/red] Task #{task_id} does not exist")
+        return
+    
+    task_description = tasks[task_id]["description"]
+    del tasks[task_id] # delete task
+    save_tasks(tasks)
+    console.print(f"[green]Task deleted:[/green] {task_description}")
+
+if __name__ == "__main__":
+    cli()
