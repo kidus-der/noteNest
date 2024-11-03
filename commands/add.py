@@ -1,16 +1,21 @@
 import click
 from rich.console import Console
-from utils.storage import load_tasks, save_tasks
+from utils.storage import add_task_to_board, load_boards
 
 console = Console()
 
 @click.command(name="add")
+@click.argument("board_name")
 @click.argument("description")
-def add_task(description):
+def add_task(board_name, description):
+
     ''' allows user to add a task'''
 
-    tasks = load_tasks()
-    task = {"description": description, "done": False}
-    tasks.append(task) # add task to task list
-    save_tasks(tasks)
-    console.print(f"[green]Task added:[/green] {description}") # rich stylized output :)
+    boards = load_boards()
+
+    if board_name not in boards:
+        console.print(f"[red]Board '{board_name}' does not exist. Create it first with 'create_board'.[/red]")
+    else:
+        task = {"description": description, "done": False}
+        add_task_to_board(board_name, task)
+        console.print(f"[green]Task added to '{board_name}':[/green] {description}")

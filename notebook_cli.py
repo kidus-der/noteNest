@@ -1,8 +1,10 @@
 import click
 from commands.add import add_task
 from commands.list import list_tasks
-from commands.done import done
+from commands.done import mark_done
 from commands.delete import delete_task
+from commands.create_board import create_board
+from commands.list_boards import list_boards
 
 # CLI commands group object
 # didn't know click lets you create a group of subcommands
@@ -13,9 +15,11 @@ def cli():
     pass
 
 # register CLI commands
+cli.add_command(create_board)
+cli.add_command(list_boards)
 cli.add_command(add_task, name="add")
 cli.add_command(list_tasks, name="list")
-cli.add_command(done)
+cli.add_command(mark_done, name="done")
 cli.add_command(delete_task, name="delete")
 
 if __name__ == "__main__":
