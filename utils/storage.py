@@ -1,8 +1,8 @@
 import json
 import os
 
-# file path for storing tasks
-DATA_FILE = "data/tasks.json"
+# file path for storing active boards
+DATA_FILE = "data/active_boards.json"
 # file path for archiving boards
 ARCHIVE_FILE = "data/archive.json"
 # makes sure data file and folder exist
