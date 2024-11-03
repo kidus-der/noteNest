@@ -1,21 +1,33 @@
 import click
 from rich.console import Console
 from rich.table import Table
-from utils.storage import load_boards
+from utils.storage import load_boards, load_board
 from datetime import datetime
 
 console = Console()
 
 @click.command(name="search")
+@click.option("--board", "board_name", type=str, help="Specify a board to search within")
 @click.option("--description", type=str, help="Keyword to search in task descriptions")
 @click.option("--status", type=click.Choice(["done", "not done"], case_sensitive=False), help="Filter by task completion status")
 @click.option("--priority", type=click.Choice(["low", "medium", "high"], case_sensitive=False), help="Filter by task priority")
 @click.option("--due-date", type=str, help="Filter by a specific due date (YYYY-MM-DD)")
-def search_tasks(description, status, priority, due_date):
+def search_tasks(board_name, description, status, priority, due_date):
 
-    """search for tasks across ALL boards based on filters."""
+    """search for tasks across ALL boards based on filters,
+    or within a user-specified board"""
 
-    boards = load_boards()
+    if board_name:
+        # load tasks for the specified board only
+        boards = {board_name: load_board(board_name)}
+
+        if not boards[board_name]:  # check if board exists and is not empty
+            console.print(f"[red]Board '{board_name}' does not exist or has no tasks :([/red]")
+            return
+    else:
+        # load tasks for all boards
+        boards = load_boards()
+    
     results = []
 
     # check due date format
@@ -28,7 +40,7 @@ def search_tasks(description, status, priority, due_date):
             return
 
     # filter tasks based on criteria
-    for board_name, tasks in boards.items():
+    for b_name, tasks in boards.items():
 
         for i, task in enumerate(tasks):
 
@@ -47,7 +59,7 @@ def search_tasks(description, status, priority, due_date):
             
             # add task to results if all criteria match
             if match:
-                results.append((board_name, i, task))
+                results.append((b_name, i, task))
 
     # display results
     if not results:
@@ -63,8 +75,8 @@ def search_tasks(description, status, priority, due_date):
     table.add_column("Priority", justify="center")
     table.add_column("Due Date", justify="center")
 
-    for board_name, task_id, task in results:
-        
+    for b_name, task_id, task in results:
+
         status = "[green]✔[/green]" if task["done"] else "[red]✘[/red]"
         table.add_row(board_name, str(task_id), task["description"], status, task["priority"], task["due_date"])
 
