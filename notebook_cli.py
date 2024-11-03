@@ -6,6 +6,7 @@ from commands.delete import delete_task
 from commands.create_board import create_board
 from commands.list_boards import list_boards
 from commands.search import search_tasks
+from commands.delete_board import delete_board_command
 
 # CLI commands group object
 # didn't know click lets you create a group of subcommands
@@ -23,6 +24,7 @@ cli.add_command(list_tasks, name="list")
 cli.add_command(mark_done, name="done")
 cli.add_command(delete_task, name="delete")
 cli.add_command(search_tasks, name="search")
+cli.add_command(delete_board_command, name="delete-board")
 
 if __name__ == "__main__":
     cli()

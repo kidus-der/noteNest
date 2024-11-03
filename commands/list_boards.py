@@ -15,7 +15,7 @@ def list_boards():
     
     if not boards:
 
-        console.print("[yellow]No boards found.[/yellow]")
+        console.print("[yellow]No boards found, please create a board[/yellow]")
 
     else:
 
