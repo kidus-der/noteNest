@@ -9,7 +9,7 @@ console = Console()
 @click.argument("board_name")
 def list_tasks(board_name):
 
-    ''' lists all tasks created by user in a table '''
+    ''' lists all tasks created by user in a board '''
 
     tasks = load_board(board_name)
 
@@ -25,10 +25,14 @@ def list_tasks(board_name):
         table.add_column("ID #", style="dim", width=6)
         table.add_column("Description", min_width=30)
         table.add_column("Status", justify="center")
+        table.add_column("Priority", justify="center")
+        table.add_column("Due Date", justify="center")
 
         for i, task in enumerate(tasks):
             
             status = "[green]✔[/green]" if task["done"] else "[red]✘[/red]"
-            table.add_row(str(i), task["description"], status)
+            priority = task.get("priority", "N/A")
+            due_date = task.get("due_date", "N/A")
+            table.add_row(str(i), task["description"], status, priority, due_date)
 
         console.print(table)
