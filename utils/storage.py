@@ -3,6 +3,8 @@ import os
 
 # file path for storing tasks
 DATA_FILE = "data/tasks.json"
+# file path for archiving boards
+ARCHIVE_FILE = "data/archive.json"
 # makes sure data file and folder exist
 os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
 if not os.path.exists(DATA_FILE): # incase it doesn't exist
@@ -95,3 +97,37 @@ def delete_task_from_board(board_name, task_id):
         
         del boards[board_name][task_id]
         save_boards(boards)
+
+def load_archived_boards():
+
+    """ Load archived boards. """
+
+    if os.path.exists(ARCHIVE_FILE):
+        try:
+            with open(ARCHIVE_FILE, 'r') as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    data = {}  
+                return data
+        except json.JSONDecodeError:
+            return {}  # return an empty dict if the file is empty
+    return {}
+
+def save_archived_boards(boards):
+
+    """ Save archived boards. """
+
+    with open(ARCHIVE_FILE, 'w') as f:
+        json.dump(boards, f, indent=4)
+
+def archive_board(board_name):
+
+    """ Move a board to the archive. """
+
+    boards = load_boards()
+    archived_boards = load_archived_boards()
+
+    if board_name in boards:
+        archived_boards[board_name] = boards.pop(board_name)
+        save_boards(boards)
+        save_archived_boards(archived_boards)
