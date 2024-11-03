@@ -97,5 +97,8 @@ venv/
 # Data folder (adjust if needed)
 data/*.json
 
+# Notes folder
+notes/
+
 # macOS
 .DS_Store

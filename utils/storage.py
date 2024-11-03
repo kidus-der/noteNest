@@ -5,6 +5,9 @@ import os
 DATA_FILE = "data/active_boards.json"
 # file path for archiving boards
 ARCHIVE_FILE = "data/archive.json"
+# Notes directory for storing task notes
+NOTES_DIR = "notes/"
+
 # makes sure data file and folder exist
 os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
 if not os.path.exists(DATA_FILE): # incase it doesn't exist
@@ -131,3 +134,18 @@ def archive_board(board_name):
         archived_boards[board_name] = boards.pop(board_name)
         save_boards(boards)
         save_archived_boards(archived_boards)
+
+def initialize_notes_directory():
+
+    """ Ensure the notes directory exists. """
+
+    if not os.path.exists(NOTES_DIR):
+        os.makedirs(NOTES_DIR)
+
+def get_task_note_path(board_name, task_id):
+
+    """ Get the file path for storing notes of a specific task. """
+    
+    board_dir = os.path.join(NOTES_DIR, board_name)
+    os.makedirs(board_dir, exist_ok=True)
+    return os.path.join(board_dir, f"task_{task_id}.txt")
