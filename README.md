@@ -22,7 +22,6 @@ noteNest is a CLI notebook app designed to help users organize tasks within boar
     - Open a task as a “file” to add notes.
     - Save and read notes within tasks for future reference.
 
-
 ## Technologies Used
 
 - Python: Primary programming language.
@@ -30,13 +29,11 @@ noteNest is a CLI notebook app designed to help users organize tasks within boar
 - Rich Python Library: For enhanced output formatting in the terminal.
 - JSON: For storing board, task, and note data in active_boards.json and archive.json.
 
-
 ## Installation
+
 - Stuff here
 
-
-
-## How to Use noteNest:
+## How to Use noteNest
 
 ### Running the CLI App
 
@@ -70,6 +67,12 @@ noteNest is a CLI notebook app designed to help users organize tasks within boar
 ```python3 notenest_cli.py archive-board <board_name>```
 
 - Moves the specified board and its tasks to the archive.
+
+##### Deleting a Board
+
+```python3 notenest_cli.py delete-board <board_name>```
+
+- Removed a board from the active boards, completely deleting the board and its contents
 
 #### II) Task Management
 
@@ -111,7 +114,7 @@ noteNest is a CLI notebook app designed to help users organize tasks within boar
 
 - Opens the specified task as a “file” and appends notes to it.
 
-##### Read Notes from a Task:
+##### Read Notes from a Task
 
 ```python3 notenest_cli.py read-note <board_name> <task_id>```
 
