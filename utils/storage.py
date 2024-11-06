@@ -149,3 +149,21 @@ def get_task_note_path(board_name, task_id):
     board_dir = os.path.join(NOTES_DIR, board_name)
     os.makedirs(board_dir, exist_ok=True)
     return os.path.join(board_dir, f"task_{task_id}.txt")
+
+def unarchive_board(board_name):
+
+    """Move a board from the archive back to active boards."""
+
+    archived_boards = load_archived_boards()
+    active_boards = load_boards()
+
+    if board_name in archived_boards:
+
+        # move board data from archive to active boards
+        active_boards[board_name] = archived_boards.pop(board_name)
+        save_boards(active_boards)
+        save_archived_boards(archived_boards)
+        
+    else:
+
+        raise ValueError(f"Board '{board_name}' not found in archive.")

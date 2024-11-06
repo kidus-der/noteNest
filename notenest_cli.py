@@ -11,6 +11,7 @@ from commands.rename_boards import rename_board
 from commands.archive_board import archive_board_command
 from commands.add_note import add_note_to_task
 from commands.read_note import read_note_from_task
+from commands.unarchive_board import unarchive_board_command
 
 
 
@@ -35,6 +36,7 @@ cli.add_command(rename_board)
 cli.add_command(archive_board_command, name="archive-board")
 cli.add_command(add_note_to_task, name="add-note")
 cli.add_command(read_note_from_task, name="read-note")
+cli.add_command(unarchive_board_command, name="unarchive-board")
 
 if __name__ == "__main__":
     cli()
